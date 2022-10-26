@@ -30,8 +30,7 @@
 			"type": "securestring"
 		},
 		"workspaceId": {
-			"type": "string",
-      "defaultValue": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', 'CMMC-LA-EUS2-SENTINEL-PROD')).customerId]
+			"type": "string"
 		},
 		"workspaceKey": {
 			"type": "string"
