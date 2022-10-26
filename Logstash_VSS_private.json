@@ -601,7 +601,7 @@
 			"location": "[resourceGroup().location]",
 			"dependsOn": [
 
-				"[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(variables('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]"
+				"[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(parameters('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]"
 			],
 			"properties": {
 				"profiles": [{
@@ -615,7 +615,7 @@
 							"metricTrigger": {
 								"metricName": "Percentage CPU",
 								"metricNamespace": "",
-								"metricResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(variables('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]",
+								"metricResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(parameters('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]",
 								"timeGrain": "PT1M",
 								"statistic": "Average",
 								"timeWindow": "PT5M",
@@ -636,7 +636,7 @@
 							"metricTrigger": {
 								"metricName": "Percentage CPU",
 								"metricNamespace": "",
-								"metricResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(variables('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]",
+								"metricResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(parameters('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]",
 								"timeGrain": "PT1M",
 								"statistic": "Average",
 								"timeWindow": "PT5M",
@@ -657,7 +657,7 @@
 				}],
 				"enabled": true,
 				"name": "[concat(parameters('Base_Name'), '-autoscale')]",
-				"targetResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(variables('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]"
+				"targetResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(parameters('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]"
 			}
 		}
 	],
