@@ -29,38 +29,24 @@
 		"AdminPassword": {
 			"type": "securestring"
 		},
-		"workspaceId": {
-			"type": "string",
-			"defaultValue": 2
+		"LAW_id": {
+			"type": "string"
 		},
 		"workspaceKey": {
-			"type": "string",
-			"defaultValue": 2
+			"type": "string"
 		}
 	},
 	"variables": {
 		"vmss_Name": "[concat(parameters('Base_Name'), '-vmss')]",
-		"storage_name": "[tolower(concat(parameters('Base_Name'), 'diag'))]",
+		"workspaceId": "[reference(parameters('LAW_id'), '2015-11-01-preview').customerId]",
 		"autoscale_Name": "[concat(parameters('Base_Name'),'-autoscale')]",
 		"loadbalancer_Name": "[concat(parameters('Base_Name'),'-lb')]",
+		"nsg_Name": "[concat(parameters('Base_Name'),'-nsg')]",
+		"pip_Name": "[concat(parameters('Base_Name'),'-pip')]",
 		"maxPortRange": "[if(lessOrEquals(parameters('Autoscale_Max'), 9), '5000', '500')]",
 		"cloudinit": "[concat('#cloud-config\n package_update: true\n package_upgrade: true\n packages:\n  - default-jre\n runcmd:\n  - while ( ! (find /var/log/azure/Microsoft.EnterpriseCloud.Monitoring.OmsAgentForLinux/extension.log | xargs grep \"Enable,success,0,Enable succeeded\")); do sleep 5; done\n  - sudo apt-get update\n  - sudo apt-get install -y apt-transport-https\n  - wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -\n  - echo \"deb https://artifacts.elastic.co/packages/7.x/apt stable main\" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list\n  - sudo apt-get update\n  - sudo apt-get install -y default-jre\n  - sudo echo \"root         soft    nofile         65536\" >> /etc/security/limits.conf\n  - sudo echo \"root         hard    nofile         65536\" >> /etc/security/limits.conf\n  - sudo echo \"*         soft    nofile         65536\" >> /etc/security/limits.conf\n  - sudo echo \"*         hard    nofile         65536\" >> /etc/security/limits.conf\n  - sudo apt-get install -y logstash\n  - sudo /usr/share/logstash/bin/logstash-plugin install logstash-output-syslog\n  - sudo /usr/share/logstash/bin/logstash-plugin update\n  - wget -q https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/DataConnectors/Logstash-VMSS/logstash.conf -O /etc/logstash/conf.d/logstash.conf\n  - echo \"update this line with wget -q https://sourceURL -O /etc/logstash/pipelines.yml if you have a custom pipelines file\"\n  - sudo systemctl start logstash.service\n  - sudo wget https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/DataConnectors/CEF/cef_installer.py&&sudo python cef_installer.py ', parameters('workspaceId'), ' ', parameters('workspaceKey'))]"
 	},
 	"resources": [{
-			"type": "Microsoft.Storage/storageAccounts",
-			"apiVersion": "2019-06-01",
-			"name": "[variables('storage_name')]",
-			"location": "[resourceGroup().location]",
-			"sku": {
-				"name": "Standard_LRS",
-				"tier": "Standard"
-			},
-			"kind": "StorageV2",
-			"properties": {
-				"supportsHttpsTrafficOnly": true
-			}
-		},
-		{
 			"type": "Microsoft.Network/loadBalancers",
 			"apiVersion": "2019-09-01",
 			"name": "[variables('loadbalancer_Name')]",
@@ -149,7 +135,6 @@
 			"name": "[variables('vmss_Name')]",
 			"location": "[resourceGroup().location]",
 			"dependsOn": [
-				"[resourceId('Microsoft.Storage/storageAccounts', variables('storage_name'))]",
 				"[resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name'))]"
 			],
 			"sku": {
@@ -223,8 +208,7 @@
 					},
 					"diagnosticsProfile": {
 						"bootDiagnostics": {
-							"enabled": true,
-							"storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storage_name'))).primaryEndpoints.blob]"
+							"enabled": true
 						}
 					},
 					"extensionProfile": {
@@ -238,11 +222,11 @@
 									"typeHandlerVersion": "1.4",
 									"autoUpgradeMinorVersion": true,
 									"settings": {
-										"workspaceId": "[parameters('workspaceId')]",
+										"workspaceId": "[variables('workspaceId')]",
 										"stopOnMultipleConnections": "true"
 									},
 									"protectedSettings": {
-										"workspaceKey": "[parameters('workspaceKey')]"
+										"workspaceKey": "[listKeys(parameters('LAW_id'), '2015-11-01-preview').primarySharedKey]"
 									}
 								}
 							},
