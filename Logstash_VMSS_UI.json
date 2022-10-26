@@ -3,7 +3,7 @@
     "view": {
         "kind": "Form",
         "properties": {
-            "title": "Test Form View",
+            "title": "Logstash VMSS Template",
             "isWizard": true,
             "steps": [
                 {
@@ -239,7 +239,7 @@
                 }
             ]
         },
-        "deployment": {
+        "outputs": {
             "parameters": {
                 "Base_Name": "fwcadmin",
                 "Autoscale_Min": 1,
@@ -248,7 +248,7 @@
                 "workspaceKey": "2",
                 "outSizeSelector": "[steps('vmParameters').vmSection.vmSize]",
                 "AdminUserName": "[steps('vmParameters').adminUsername]",
-                "AdminPassword": "[steps('vmParameters').vmCredentials.value.password]",
+                "AdminPassword": "[steps('vmParameters').vmCredentials]",
                 "outVirtualNetworkCombo": "[steps('networking').vnet]",
                 "vnet_Name": "[steps('networking').vnet.name]",
                 "vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
