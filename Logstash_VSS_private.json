@@ -141,58 +141,57 @@
 						}
 					},
 					{
-						"name": "LBSyslogTCPRule-2",
-						"properties": {
-							"frontendIPConfiguration": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
-							},
-							"frontendPort": 514,
-							"backendPort": 514,
-							"enableFloatingIP": false,
-							"idleTimeoutInMinutes": 5,
-							"protocol": "TCP",
-							"enableTcpReset": false,
-							"loadDistribution": "Default",
-							"disableOutboundSnat": false,
-							"backendAddressPool": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/backendAddressPools/bepool')]"
-							},
-							"probe": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/probes/tcpProbe-2')]"
+							"name": "LBSyslogTCPRule-2",
+							"properties": {
+								"frontendIPConfiguration": {
+									"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+								},
+								"frontendPort": 514,
+								"backendPort": 514,
+								"enableFloatingIP": false,
+								"idleTimeoutInMinutes": 5,
+								"protocol": "TCP",
+								"enableTcpReset": false,
+								"loadDistribution": "Default",
+								"disableOutboundSnat": false,
+								"backendAddressPool": {
+									"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/backendAddressPools/bepool')]"
+								},
+								"probe": {
+									"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/probes/tcpProbe-2')]"
+								}
+							}
+						},
+						{
+							"name": "LBSyslogUDPRule-2",
+							"properties": {
+								"frontendIPConfiguration": {
+									"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+								},
+								"frontendPort":514,
+								"backendPort": 514,
+								"enableFloatingIP": false,
+								"idleTimeoutInMinutes": 5,
+								"protocol": "Udp",
+								"enableTcpReset": false,
+								"loadDistribution": "Default",
+								"disableOutboundSnat": false,
+								"backendAddressPool": {
+									"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/backendAddressPools/bepool')]"
+								},
+								"probe": {
+									"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/probes/tcpProbe-2')]"
+								}
 							}
 						}
-					},
-					{
-						"name": "LBSyslogUDPRule-2",
-						"properties": {
-							"frontendIPConfiguration": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
-							},
-							"frontendPort": 514,
-							"backendPort": 514,
-							"enableFloatingIP": false,
-							"idleTimeoutInMinutes": 5,
-							"protocol": "Udp",
-							"enableTcpReset": false,
-							"loadDistribution": "Default",
-							"disableOutboundSnat": false,
-							"backendAddressPool": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/backendAddressPools/bepool')]"
-							},
-							"probe": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/probes/tcpProbe-2')]"
-							}
-						}
-					}
 				],
 				"probes": [{
-						"name": "tcpProbe",
-						"properties": {
-							"protocol": "Tcp",
-							"port": 5514,
-							"intervalInSeconds": 5,
-							"numberOfProbes": 2
-						}
+					"name": "tcpProbe",
+					"properties": {
+						"protocol": "Tcp",
+						"port": 5514,
+						"intervalInSeconds": 5,
+						"numberOfProbes": 2
 					},
 					{
 						"name": "tcpProbe-2",
@@ -202,9 +201,7 @@
 							"intervalInSeconds": 5,
 							"numberOfProbes": 2
 						}
-					}
-
-				],
+				}],
 				"inboundNatRules": [],
 				"outboundRules": [],
 				"inboundNatPools": []
