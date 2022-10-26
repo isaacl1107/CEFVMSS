@@ -323,8 +323,9 @@
 				"workspaceId": "[steps('log_analytics').workspace_id]",
 				"workspaceKey": "[steps('log_analytics').workspace_key]",
 				"location": "[steps('basics').resourceScope.location.name]",
-				"internet_gateway": "[if(steps('logicConditions').internet_egress,steps('logicConditions').internet_egress,'none')]",
-				"lb_type": "[steps('logicConditions').lb_type]"
+  				"lb_type": "[steps('logicConditions').lb_type]",
+				"internet_gateway": "[if(empty(steps('logicConditions').internet_egress),'none',steps('logicConditions').internet_egress)]"
+	
 			},
 			"kind": "ResourceGroup",
 			"location": "[steps('basics').resourceScope.location.name]",
