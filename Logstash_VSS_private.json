@@ -20,20 +20,22 @@
 		},
 		"Autoscale_Max": {
 			"type": "int",
-			"defaultValue": 10
+			"defaultValue": 2
 		},
 		"AdminUserName": {
 			"type": "string",
-			"defaultValue": "logstash"
+			"defaultValue": "admin"
 		},
 		"AdminPassword": {
 			"type": "securestring"
 		},
 		"workspaceId": {
-			"type": "string"
+			"type": "string",
+      "defaultValue": 2
 		},
 		"workspaceKey": {
-			"type": "string"
+			"type": "string",
+      "defaultValue": 2
 		}
 	},
 	"variables": {
@@ -205,20 +207,20 @@
 											"id": "[resourceId(parameters('vnet_RG_Name'), 'Microsoft.Network/virtualNetworks/Subnets', parameters('vnet_Name'), parameters('subnet_Name'))]"
 										},
 										"privateIPAddressVersion": "IPv4",
+                    "publicIPAddressconfiguration": {
+                      "name": "publicip",
+                      "properties": {
+                      "idleTimeoutInMinutes": 10,
+                        "dnsSettings": {
+                          "domainNameLabel": "[parameters('vmssDnsName')]"
+                        }
+                      }
+                    },
 										"loadBalancerBackendAddressPools": [{
 											"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name')), '/backendAddressPools/bepool')]"
 										}]
 									}
-								}],
-								"publicIpAddressConfiguration": {
-									"name": "pub1",
-									"sku": {
-										"name": "Standard"
-									},
-									"properties": {
-										"idleTimeoutInMinutes": 15
-									}
-								}
+								}]
 							}
 						}]
 					},
