@@ -235,6 +235,9 @@
           "vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
           "subnet_Name": "[steps('networking').vnet.subnets.subnet1.name]",
           "outTagsByResource": "[steps('tags').tagsByResource]"
-        }
+        },
+        "kind": "ResourceGroup",
+        "location": "[steps('basics').resourceScope.location.name]",
+        "resourceGroupId": "[steps('basics').resourceScope.resourceGroup.id]"
     }
 }
