@@ -669,10 +669,6 @@
 		"customData": {
 			"type": "string",
 			"value": "[variables('cloudinit')]"
-		},
-		"osprofile": {
-			"type": "object",
-			"value": "[reference(if(equals(parameters('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal'))]"
 		}
 	}
 }
