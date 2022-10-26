@@ -222,22 +222,21 @@
             }
         ],
         "outputs": {
-          "Base_Name": "fwcadmin",
-          "Autoscale_Min": 1,
-          "Autoscale_Max": 2,
-          "workspaceId": "2",
-          "workspaceKey": "2",
-          "outSizeSelector": "[steps('vmParameters').vmSection.vmSize]",
-          "AdminUserName": "[steps('vmParameters').adminUsername]",
-          "AdminPassword": "[steps('vmParameters').vmCredentials.value.password]",
-          "outVirtualNetworkCombo": "[steps('networking').vnet]",
-		      "vnet_Name": "[steps('networking').vnet.name]",
-          "vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
-          "subnet_Name": "[steps('networking').vnet.subnets.subnet1.name]",
-          "outTagsByResource": "[steps('tags').tagsByResource]"
-        },
-        "kind": "ResourceGroup",
-        "location": "[steps('basics').resourceScope.location.name]",
-        "resourceGroupId": "[steps('basics').resourceScope.resourceGroup.id]"
+          "parameters": {
+            "Base_Name": "fwcadmin",
+            "Autoscale_Min": 1,
+            "Autoscale_Max": 2,
+            "workspaceId": "2",
+            "workspaceKey": "2",
+            "outSizeSelector": "[steps('vmParameters').vmSection.vmSize]",
+            "AdminUserName": "[steps('vmParameters').adminUsername]",
+            "AdminPassword": "[steps('vmParameters').vmCredentials.value.password]",
+            "outVirtualNetworkCombo": "[steps('networking').vnet]",
+  		      "vnet_Name": "[steps('networking').vnet.name]",
+            "vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
+            "subnet_Name": "[steps('networking').vnet.subnets.subnet1.name]",
+            "outTagsByResource": "[steps('tags').tagsByResource]"
+          }
+		}
     }
 }
