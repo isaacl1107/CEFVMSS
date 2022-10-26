@@ -4,7 +4,8 @@
     "version": "0.1.2-preview",
     "parameters": {
         "basics": [
-            {}
+            {
+            }
         ],
         "steps": [
             {
@@ -221,15 +222,19 @@
             }
         ],
         "outputs": {
-	    "Base_name" :"fwc-aw",
-            "outSizeSelector": "[steps('vmParameters').vmSection.vmSize]",
-            "AdminUserName": "[steps('vmParameters').adminUsername]",
-            "AdminPassword": "[steps('vmParameters').vmCredentials.value.password]",
-            "outVirtualNetworkCombo": "[steps('networking').vnet]",
-	    "vnet_Name": "[steps('networking').vnet.name]",
-            "vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
-            "subnet_Name": "[steps('networking').vnet.subnet.subnet1.name]",
-            "outTagsByResource": "[steps('tags').tagsByResource]"
+          "Base_Name": "fwcadmin",
+          "Autoscale_Min": 1,
+          "Autoscale_Max": 2,
+          "workspaceId": 2,
+          "workspaceKey": 2,
+          "outSizeSelector": "[steps('vmParameters').vmSection.vmSize]",
+          "AdminUserName": "[steps('vmParameters').adminUsername]",
+          "AdminPassword": "[steps('vmParameters').vmCredentials.value.password]",
+          "outVirtualNetworkCombo": "[steps('networking').vnet]",
+		      "vnet_Name": "[steps('networking').vnet.name]",
+          "vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
+          "subnet_Name": "[steps('networking').vnet.subnet.subnet1.name]",
+          "outTagsByResource": "[steps('tags').tagsByResource]"
         }
     }
 }
