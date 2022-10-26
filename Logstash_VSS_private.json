@@ -216,11 +216,28 @@
 			"location": "[resourceGroup().location]",
 			"properties": {
 				"securityRules": [{
+					"name": "Allow-CEF",
+					"properties": {
+						"protocol": "*",
+						"sourcePortRange": "*",
+						"destinationPortRange": "5514",
+						"sourceAddressPrefix": "AzureLoadBalancer",
+						"destinationAddressPrefix": "*",
+						"access": "Allow",
+						"priority": 1000,
+						"direction": "Inbound",
+						"sourcePortRanges": [],
+						"destinationPortRanges": [],
+						"sourceAddressPrefixes": [],
+						"destinationAddressPrefixes": []
+					}
+				},
+				{
 					"name": "Allow-Syslog",
 					"properties": {
 						"protocol": "*",
 						"sourcePortRange": "*",
-						"destinationPortRange": "514,5514",
+						"destinationPortRange": "514",
 						"sourceAddressPrefix": "AzureLoadBalancer",
 						"destinationAddressPrefix": "*",
 						"access": "Allow",
@@ -232,28 +249,6 @@
 						"destinationAddressPrefixes": []
 					}
 				}]
-			}
-		},
-		{
-			"type": "Microsoft.Network/networkSecurityGroups/securityRules",
-			"apiVersion": "2019-09-01",
-			"name": "[concat(variables('nsg_Name'), '/Allow-Syslog')]",
-			"dependsOn": [
-				"[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_Name'))]"
-			],
-			"properties": {
-				"protocol": "*",
-				"sourcePortRange": "*",
-				"destinationPortRange": "514,5514",
-				"sourceAddressPrefix": "AzureLoadBalancer",
-				"destinationAddressPrefix": "*",
-				"access": "Allow",
-				"priority": 1000,
-				"direction": "Inbound",
-				"sourcePortRanges": [],
-				"destinationPortRanges": [],
-				"sourceAddressPrefixes": [],
-				"destinationAddressPrefixes": []
 			}
 		},
 		{
