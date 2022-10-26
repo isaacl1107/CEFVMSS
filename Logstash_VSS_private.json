@@ -445,7 +445,7 @@
 										"stopOnMultipleConnections": "true"
 									},
 									"protectedSettings": {
-										"workspaceKey": "[parameters('workspaceKey')]",
+										"workspaceKey": "[parameters('workspaceKey')]"
 									}
 								}
 							},
