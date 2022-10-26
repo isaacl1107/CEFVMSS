@@ -24,7 +24,7 @@
 		},
 		"AdminUserName": {
 			"type": "string",
-			"defaultValue": "vmadmin"
+			"defaultValue": "admin"
 		},
 		"AdminPassword": {
 			"type": "securestring"
@@ -38,9 +38,8 @@
 		"vmSize": {
 			"type": "string"
 		},
-		"internet_gateway": {
-			"type": "string",
-			"defaultValue": "public_ip"
+		"internet_egress": {
+			"type": "string"
 		},
 		"lb_type": {
 			"type": "string"
