@@ -46,6 +46,7 @@
 		}
 	},
 	"variables": {
+		"storage_name": "[tolower(concat(replace(replace(parameters('Base_Name'),'-',''),'_',''), 'diag'))]",
 		"vmss_Name": "[concat(parameters('Base_Name'), '-vmss')]",
 		"vmss_Name_Internal": "[concat(parameters('Base_Name'), '-vmss','-internal')]",
 		"autoscale_Name": "[concat(parameters('Base_Name'),'-autoscale')]",
@@ -57,6 +58,20 @@
 		"cloudinit": "[concat('#cloud-config\n package_update: true\n package_upgrade: true\n packages:\n  - default-jre\n runcmd:\n  - while ( ! (find /var/log/azure/Microsoft.EnterpriseCloud.Monitoring.OmsAgentForLinux/extension.log | xargs grep \"Enable,success,0,Enable succeeded\")); do sleep 5; done\n  - sudo apt-get update\n  - sudo apt-get install -y apt-transport-https\n  - wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -\n  - echo \"deb https://artifacts.elastic.co/packages/7.x/apt stable main\" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list\n  - sudo apt-get update\n  - sudo apt-get install -y default-jre\n  - sudo echo \"root         soft    nofile         65536\" >> /etc/security/limits.conf\n  - sudo echo \"root         hard    nofile         65536\" >> /etc/security/limits.conf\n  - sudo echo \"*         soft    nofile         65536\" >> /etc/security/limits.conf\n  - sudo echo \"*         hard    nofile         65536\" >> /etc/security/limits.conf\n  - sudo apt-get install -y logstash\n  - sudo /usr/share/logstash/bin/logstash-plugin install logstash-output-syslog\n  - sudo /usr/share/logstash/bin/logstash-plugin update\n  - wget -q https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/DataConnectors/Logstash-VMSS/logstash.conf -O /etc/logstash/conf.d/logstash.conf\n  - echo \"update this line with wget -q https://sourceURL -O /etc/logstash/pipelines.yml if you have a custom pipelines file\"\n  - sudo systemctl start logstash.service\n  - sudo wget https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/DataConnectors/CEF/cef_installer.py&&sudo python cef_installer.py ', parameters('workspaceId'), ' ', parameters('workspaceKey'))]"
 	},
 	"resources": [{
+			"type": "Microsoft.Storage/storageAccounts",
+			"apiVersion": "2019-06-01",
+			"name": "[variables('storage_name')]",
+			"location": "[resourceGroup().location]",
+			"sku": {
+					"name": "Standard_LRS",
+					"tier": "Standard"
+			},
+			"kind": "StorageV2",
+			"properties": {
+					"supportsHttpsTrafficOnly": true
+			}
+		},
+		{
 			"condition": "[equals(parameters('lb_type'),'private')]",
 			"type": "Microsoft.Network/loadBalancers",
 			"apiVersion": "2019-09-01",
@@ -353,6 +368,7 @@
 			"location": "[resourceGroup().location]",
 			"dependsOn": [
 				"[resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal'))]",
+				"[resourceId('Microsoft.Storage/storageAccounts', variables('storage_name'))]",
 				"[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_Name'))]"
 			],
 			"sku": {
@@ -429,7 +445,8 @@
 					},
 					"diagnosticsProfile": {
 						"bootDiagnostics": {
-							"enabled": true
+							"enabled": true,
+							"storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storage_name'))).primaryEndpoints.blob]"
 						}
 					},
 					"extensionProfile": {
@@ -479,6 +496,7 @@
 			"location": "[resourceGroup().location]",
 			"dependsOn": [
 				"[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_Name'))]",
+				"[resourceId('Microsoft.Storage/storageAccounts', variables('storage_name'))]",
 				"[resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name'))]"
 			],
 			"sku": {
@@ -552,7 +570,8 @@
 					},
 					"diagnosticsProfile": {
 						"bootDiagnostics": {
-							"enabled": true
+							"enabled": true,
+							"storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storage_name'))).primaryEndpoints.blob]"
 						}
 					},
 					"extensionProfile": {
