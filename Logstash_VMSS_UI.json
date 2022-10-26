@@ -239,7 +239,7 @@
                 }
             ]
         },
-        "outputs": {
+        "deployment": {
             "parameters": {
                 "Base_Name": "fwcadmin",
                 "Autoscale_Min": 1,
