@@ -1,4 +1,5 @@
 {
+	"$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
 	"handler": "Microsoft.Azure.CreateUIDef",
 	"version": "0.1.2-preview",
 	"parameters": {
@@ -187,7 +188,6 @@
 			}]
 		}],
 		"outputs": {
-			"parameters": {
 				"Base_Name": "fwcadmin",
 				"Autoscale_Min": 1,
 				"Autoscale_Max": 2,
@@ -201,7 +201,6 @@
 				"vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
 				"subnet_Name": "[steps('networking').vnet.subnets.subnet1.name]",
 				"outTagsByResource": "[steps('tags').tagsByResource]"
-			}
 		}
 	}
 }
