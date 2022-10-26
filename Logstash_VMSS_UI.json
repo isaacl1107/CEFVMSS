@@ -255,12 +255,22 @@
 				{
 					"name": "log_analytics",
 					"label": "Log Analytics",
-					"elements": [	{
+					"elements": [
+            {
+  							"name": "infoMessage",
+  							"type": "Microsoft.Common.InfoBox",
+  							"visible": true,
+  							"options": {
+  								"text": "Please Enter Sentinel LAW Information",
+  								"style": "Info"
+  							}
+  						},
+              {
 							"name": "workspace_id",
 							"type": "Microsoft.Common.TextBox",
 							"label": "Workspace ID",
 							"defaultValue": "",
-							"toolTip": "",
+							"toolTip": "Can be found in Log Analytics Workspace Under Agents management",
 							"placeholder": "",
 							"multiLine": false,
 							"constraints": {
@@ -273,7 +283,7 @@
 							"type": "Microsoft.Common.TextBox",
 							"label": "Workspace Key",
 							"defaultValue": "",
-							"toolTip": "",
+							"toolTip": "Can be found in Log Analytics Workspace Under Agents management",
 							"placeholder": "",
 							"multiLine": false,
 							"constraints": {
