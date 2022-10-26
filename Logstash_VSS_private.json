@@ -63,12 +63,12 @@
 			"name": "[variables('storage_name')]",
 			"location": "[resourceGroup().location]",
 			"sku": {
-					"name": "Standard_LRS",
-					"tier": "Standard"
+				"name": "Standard_LRS",
+				"tier": "Standard"
 			},
 			"kind": "StorageV2",
 			"properties": {
-					"supportsHttpsTrafficOnly": true
+				"supportsHttpsTrafficOnly": true
 			}
 		},
 		{
@@ -162,24 +162,22 @@
 			"location": "[resourceGroup().location]",
 			"properties": {
 				"securityRules": [{
-						"name": "Allow-Syslog",
-						"properties": {
-							"protocol": "*",
-							"sourcePortRange": "*",
-							"destinationPortRange": "5514",
-							"sourceAddressPrefix": "AzureLoadBalancer",
-							"destinationAddressPrefix": "*",
-							"access": "Allow",
-							"priority": 1000,
-							"direction": "Inbound",
-							"sourcePortRanges": [],
-							"destinationPortRanges": [],
-							"sourceAddressPrefixes": [],
-							"destinationAddressPrefixes": []
-						}
+					"name": "Allow-Syslog",
+					"properties": {
+						"protocol": "*",
+						"sourcePortRange": "*",
+						"destinationPortRange": "5514",
+						"sourceAddressPrefix": "AzureLoadBalancer",
+						"destinationAddressPrefix": "*",
+						"access": "Allow",
+						"priority": 1000,
+						"direction": "Inbound",
+						"sourcePortRanges": [],
+						"destinationPortRanges": [],
+						"sourceAddressPrefixes": [],
+						"destinationAddressPrefixes": []
 					}
-					}
-				]
+				}]
 			}
 		},
 		{
