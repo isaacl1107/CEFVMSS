@@ -75,7 +75,7 @@
 										"value": "public_ip"
 									}
 								],
-								"required": true
+								"required": "[if(equals(steps('logicConditions').lb_type,'private'),true,false)]"
 							},
 							"visible": "[if(equals(steps('logicConditions').lb_type,'private'),true,false)]"
 						}
