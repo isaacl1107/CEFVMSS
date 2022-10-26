@@ -47,8 +47,10 @@
 	},
 	"variables": {
 		"vmss_Name": "[concat(parameters('Base_Name'), '-vmss')]",
+		"vmss_Name_Internal": "[concat(parameters('Base_Name'), '-vmss','-internal')]",
 		"autoscale_Name": "[concat(parameters('Base_Name'),'-autoscale')]",
 		"loadbalancer_Name": "[concat(parameters('Base_Name'),'-lb')]",
+		"loadbalancer_Name_Internal": "[concat(parameters('Base_Name'),'-lb','-internal')]",
 		"nsg_Name": "[concat(parameters('Base_Name'),'-nsg')]",
 		"pip_Name": "[concat(parameters('Base_Name'),'-pip')]",
 		"maxPortRange": "[if(lessOrEquals(parameters('Autoscale_Max'), 9), '5000', '500')]",
@@ -58,7 +60,7 @@
 			"condition": "[equals(parameters('lb_type'),'private')]",
 			"type": "Microsoft.Network/loadBalancers",
 			"apiVersion": "2019-09-01",
-			"name": "[variables('loadbalancer_Name')]",
+			"name": "[variables('loadbalancer_Name_Internal')]",
 			"location": "[resourceGroup().location]",
 			"dependsOn": [],
 			"sku": {
@@ -83,7 +85,7 @@
 						"name": "LBSyslogTCPRule",
 						"properties": {
 							"frontendIPConfiguration": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
 							},
 							"frontendPort": 5514,
 							"backendPort": 5514,
@@ -94,10 +96,10 @@
 							"loadDistribution": "Default",
 							"disableOutboundSnat": false,
 							"backendAddressPool": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name')), '/backendAddressPools/bepool')]"
+								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/backendAddressPools/bepool')]"
 							},
 							"probe": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name')), '/probes/tcpProbe')]"
+								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/probes/tcpProbe')]"
 							}
 						}
 					},
@@ -105,7 +107,7 @@
 						"name": "LBSyslogUDPRule",
 						"properties": {
 							"frontendIPConfiguration": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
 							},
 							"frontendPort": 5514,
 							"backendPort": 5514,
@@ -116,10 +118,10 @@
 							"loadDistribution": "Default",
 							"disableOutboundSnat": false,
 							"backendAddressPool": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name')), '/backendAddressPools/bepool')]"
+								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/backendAddressPools/bepool')]"
 							},
 							"probe": {
-								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name')), '/probes/tcpProbe')]"
+								"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/probes/tcpProbe')]"
 							}
 						}
 					}
@@ -347,10 +349,10 @@
 			"condition": "[and(equals(parameters('lb_type'),'private'),equals(parameters('internet_egress'),'public_ip'))]",
 			"type": "Microsoft.Compute/virtualMachineScaleSets",
 			"apiVersion": "2019-03-01",
-			"name": "[variables('vmss_Name')]",
+			"name": "[variables('vmss_Name_Internal')]",
 			"location": "[resourceGroup().location]",
 			"dependsOn": [
-				"[resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name'))]",
+				"[resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal'))]",
 				"[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_Name'))]"
 			],
 			"sku": {
@@ -415,7 +417,7 @@
 											}
 										},
 										"loadBalancerBackendAddressPools": [{
-											"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name')), '/backendAddressPools/bepool')]"
+											"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/backendAddressPools/bepool')]"
 										}]
 									}
 								}]
@@ -598,7 +600,8 @@
 			"name": "[variables('autoscale_Name')]",
 			"location": "[resourceGroup().location]",
 			"dependsOn": [
-				"[resourceId('Microsoft.Compute/virtualMachineScaleSets', variables('vmss_Name'))]"
+
+				"[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(variables('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]"
 			],
 			"properties": {
 				"profiles": [{
@@ -612,7 +615,7 @@
 							"metricTrigger": {
 								"metricName": "Percentage CPU",
 								"metricNamespace": "",
-								"metricResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', variables('vmss_Name'))]",
+								"metricResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(variables('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]",
 								"timeGrain": "PT1M",
 								"statistic": "Average",
 								"timeWindow": "PT5M",
@@ -633,7 +636,7 @@
 							"metricTrigger": {
 								"metricName": "Percentage CPU",
 								"metricNamespace": "",
-								"metricResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', variables('vmss_Name'))]",
+								"metricResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(variables('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]",
 								"timeGrain": "PT1M",
 								"statistic": "Average",
 								"timeWindow": "PT5M",
@@ -654,7 +657,7 @@
 				}],
 				"enabled": true,
 				"name": "[concat(parameters('Base_Name'), '-autoscale')]",
-				"targetResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', variables('vmss_Name'))]"
+				"targetResourceUri": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', if(equals(variables('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal')))]"
 			}
 		}
 	],
