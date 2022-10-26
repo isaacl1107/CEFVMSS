@@ -17,7 +17,7 @@
 							"type": "Microsoft.Common.TextBox",
 							"label": "Base Name",
 							"defaultValue": "",
-							"toolTip": "Enter Prefix for Resource Naming",
+							"toolTip": "Enter Prefix for Resource Naming (cannot include ~ ! @ # $ % ^ & * ( ) = + _ [ ] { } \\ | ; :)",
 							"placeholder": "",
 							"multiLine": false,
 							"constraints": {
