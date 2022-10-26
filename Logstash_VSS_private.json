@@ -672,7 +672,7 @@
 		},
 		"osprofile": {
 			"type": "object",
-			"value": "[reference(variables('vmss_Name'))]"
+			"value": "[reference(if(equals(parameters('lb_type'),'public'),variables('vmss_Name'),variables('vmss_Name_Internal'))]"
 		}
 	}
 }
