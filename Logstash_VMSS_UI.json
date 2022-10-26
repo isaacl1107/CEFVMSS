@@ -95,10 +95,15 @@
 									"toolTip": "",
 									"recommendedSizes": [
 										"Standard_B8ms",
+										"Standard_B4ms",
 										"Standard_B16ms"
 									],
 									"constraints": {
-										"allowedSizes": []
+										"allowedSizes": [
+										"Standard_B8ms",
+										"Standard_B4ms",
+										"Standard_B16ms"
+									]
 									},
 									"options": {
 										"hideDiskTypeFilter": false
@@ -238,7 +243,7 @@
 									}
 								}
 							},
-							"visible": "[if(equals(steps('logicConditions').lb_type,'private'),true,false)]",
+							"visible": true,
 							"scope": {
 								"subscriptionId": "[steps('basics').resourceScope.subscription.subscriptionId]",
 								"resourceGroupName": "[steps('basics').resourceScope.resourceGroup.name]",
@@ -250,11 +255,18 @@
 				{
 					"name": "log_analytics",
 					"label": "Log Analytics",
-					"elements": [{
-							"name": "law_selector",
-							"type": "Microsoft.Solutions.ResourceSelector",
-							"label": "Select Log Analytics Workspace",
-							"resourceType": "Microsoft.OperationalInsights/workspaces"
+					"elements": [	{
+							"name": "workspace_id",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Workspace ID",
+							"defaultValue": "",
+							"toolTip": "",
+							"placeholder": "",
+							"multiLine": false,
+							"constraints": {
+								"required": true
+							},
+							"visible": true
 						},
 						{
 							"name": "workspace_key",
@@ -298,7 +310,7 @@
 				"vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
 				"subnet_Name": "[steps('networking').vnet.subnets.subnet1.name]",
 				"outTagsByResource": "[steps('tags').tagsByResource]",
-				"LAW_id": "[steps('log_analytics').law_selector.id]",
+				"workspaceId": "[steps('log_analytics').workspace_id]",
 				"workspaceKey": "[steps('log_analytics').workspace_key]",
 				"location": "[steps('basics').resourceScope.location.name]",
 				"internet_gateway": "[steps('logicConditions').internet_egress]",
