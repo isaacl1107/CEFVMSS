@@ -221,11 +221,12 @@
             }
         ],
         "outputs": {
+	    "Base_name" :"fwc-aw",
             "outSizeSelector": "[steps('vmParameters').vmSection.vmSize]",
             "AdminUserName": "[steps('vmParameters').adminUsername]",
             "AdminPassword": "[steps('vmParameters').vmCredentials.value.password]",
             "outVirtualNetworkCombo": "[steps('networking').vnet]",
-			      "vnet_Name": "[steps('networking').vnet.name]",
+	    "vnet_Name": "[steps('networking').vnet.name]",
             "vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
             "subnet_Name": "[steps('networking').vnet.subnet.subnet1.name]",
             "outTagsByResource": "[steps('tags').tagsByResource]"
