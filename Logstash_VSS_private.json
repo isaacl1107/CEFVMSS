@@ -420,10 +420,10 @@
 											"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name_Internal')), '/backendAddressPools/bepool')]"
 										}]
 									}
-								}]
-							},
-							"networkSecurityGroup": {
-								"id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_Name'))]"
+								}],
+								"networkSecurityGroup": {
+									"id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_Name'))]"
+								}
 							}
 						}]
 					},
@@ -543,10 +543,11 @@
 											"id": "[concat(resourceId('Microsoft.Network/loadBalancers/', variables('loadbalancer_Name')), '/inboundNatPools/natPool')]"
 										}]
 									}
-								}]
-							},
-							"networkSecurityGroup": {
-								"id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_Name'))]"
+								}],
+								,
+								"networkSecurityGroup": {
+									"id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_Name'))]"
+								}
 							}
 						}]
 					},
