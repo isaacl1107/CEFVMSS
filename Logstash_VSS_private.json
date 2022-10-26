@@ -220,7 +220,7 @@
 					"properties": {
 						"protocol": "*",
 						"sourcePortRange": "*",
-						"destinationPortRange": "5514",
+						"destinationPortRange": "514,5514",
 						"sourceAddressPrefix": "AzureLoadBalancer",
 						"destinationAddressPrefix": "*",
 						"access": "Allow",
@@ -244,7 +244,7 @@
 			"properties": {
 				"protocol": "*",
 				"sourcePortRange": "*",
-				"destinationPortRange": "5514",
+				"destinationPortRange": "514,5514",
 				"sourceAddressPrefix": "AzureLoadBalancer",
 				"destinationAddressPrefix": "*",
 				"access": "Allow",
