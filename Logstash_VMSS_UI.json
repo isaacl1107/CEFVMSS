@@ -1,206 +1,264 @@
 {
-	"$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
-	"handler": "Microsoft.Azure.CreateUIDef",
-	"version": "0.1.2-preview",
-	"parameters": {
-		"config": {
-			"isWizard": true,
-			"basics": {}
-		},
-		"basics": [],
-		"steps": [{
-			"name": "logicConditions",
-			"label": "Architecture Design",
-			"elements": [{
-				"name": "infoMessage",
-				"type": "Microsoft.Common.InfoBox",
-				"visible": true,
-				"options": {
-					"icon": "Info",
-					"text": "Please select the following networking options"
-				}
-			}, {
-				"name": "lb_type",
-				"type": "Microsoft.Common.OptionsGroup",
-				"label": "Select Load Balancer Type",
-				"defaultValue": "private",
-				"toolTip": "Private LB will get an internal only IP in the VNET, Public LB will get a internet routable Public IP address",
-				"constraints": {
-					"allowedValues": [{
-						"label": "Private LB",
-						"value": "private"
-					}, {
-						"label": "Public LB",
-						"value": "public"
-					}],
-					"required": true
-				},
-				"visible": true
-			}, {
-				"name": "internet_egress",
-				"type": "Microsoft.Common.OptionsGroup",
-				"label": "Select Internet Egress Method",
-				"defaultValue": "nat_gw",
-				"toolTip": "",
-				"constraints": {
-					"allowedValues": [{
-						"label": "NAT Gateway",
-						"value": "nat_gw"
-					}, {
-						"label": "Public IP",
-						"value": "public_ip"
-					}],
-					"required": true
-				},
-				"visible": "[if(equals(steps('logicConditions').lb_type,'private'),true, false)]"
-			}]
-		}, {
-			"name": "vmParameters",
-			"label": "VM Parameters",
-			"elements": [{
-				"name": "vmSection",
-				"type": "Microsoft.Common.Section",
-				"label": "Customize your VM",
-				"elements": [{
-					"name": "vmSize",
-					"type": "Microsoft.Compute.SizeSelector",
-					"label": "Size",
-					"toolTip": "",
-					"recommendedSizes": ["Standard_B8ms", "Standard_B16ms"],
-					"constraints": {
-						"allowedSizes": []
-					},
-					"options": {
-						"hideDiskTypeFilter": false
-					},
-					"osPlatform": "Linux",
-					"imageReference": {
-						"publisher": "Canonical",
-						"offer": "UbuntuServer",
-						"sku": "18.04-LTS",
-						"version": "latest"
-					},
-					"count": 2,
-					"visible": true
-				}],
-				"visible": true
-			}, {
-				"name": "adminUsername",
-				"type": "Microsoft.Compute.UserNameTextBox",
-				"label": "Admin Username",
-				"defaultValue": "",
-				"toolTip": "",
-				"constraints": {
-					"required": true,
-					"regex": "^[a-z0-9A-Z]{8,30}$",
-					"validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
-				},
-				"osPlatform": "Linux",
-				"visible": true
-			}, {
-				"name": "vmCredentials",
-				"type": "Microsoft.Compute.CredentialsCombo",
-				"label": {
-					"password": "Password",
-					"confirmPassword": "Confirm password"
-				},
-				"toolTip": {
-					"password": ""
-				},
-				"constraints": {
-					"required": true,
-					"customPasswordRegex": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[\\w~@#$%^&*+=|{}:;!.?\\()\\[\\]-]{8,}$",
-					"customValidationMessage": "The password must contain at least 8 characters, with at least 1 uppercase, 1 lowercase and 1 number."
-				},
-				"options": {
-					"hideConfirmation": true
-				},
-				"osPlatform": "Linux",
-				"visible": true
-			}]
-		}, {
-			"name": "networking",
-			"label": "Networking",
-			"elements": [{
-				"name": "networkingInfo",
-				"type": "Microsoft.Common.TextBlock",
-				"visible": true,
-				"options": {
-					"text": "Select the networking for the Load Balancer and Virtual Machine Scale Set",
-					"link": {
-						"label": "",
-						"uri": ""
-					}
-				}
-			}, {
-				"name": "vnet",
-				"type": "Microsoft.Network.VirtualNetworkCombo",
-				"label": {
-					"virtualNetwork": "Virtual network",
-					"subnets": "Subnets"
-				},
-				"toolTip": {
-					"virtualNetwork": "",
-					"subnets": ""
-				},
-				"defaultValue": {
-					"name": "vnet01",
-					"addressPrefixSize": "/24"
-				},
-				"constraints": {
-					"minAddressPrefixSize": "/28"
-				},
-				"options": {
-					"hideExisting": false
-				},
-				"subnets": {
-					"subnet1": {
-						"label": "Subnet",
-						"defaultValue": {
-							"name": "subnet-1",
-							"addressPrefixSize": "/28"
-						},
-						"constraints": {
-							"minAddressPrefixSize": "/28",
-							"minAddressCount": 12,
-							"requireContiguousAddresses": false
-						}
-					}
-				},
-				"visible": "[if(equals(steps('logicConditions').lb_type,'private'),true, false)]"
-			}]
-		}, {
-			"name": "log_analytics",
-			"label": "Log Analytics",
-			"elements": [{
-				"name": "law_selector",
-				"type": "Microsoft.Solutions.ResourceSelector",
-				"label": "Select Log Analytics Workspace",
-				"resourceType": "Microsoft.OperationalInsights/workspaces"
-			}]
-		}, {
-			"name": "tags",
-			"label": "Tags",
-			"elements": [{
-				"name": "tagsByResource",
-				"type": "Microsoft.Common.TagsByResource",
-				"resources": ["Microsoft.Storage/storageAccounts", "Microsoft.Compute/virtualMachines"]
-			}]
-		}],
-		"outputs": {
-				"Base_Name": "fwcadmin",
-				"Autoscale_Min": 1,
-				"Autoscale_Max": 2,
-				"workspaceId": "2",
-				"workspaceKey": "2",
-				"outSizeSelector": "[steps('vmParameters').vmSection.vmSize]",
-				"AdminUserName": "[steps('vmParameters').adminUsername]",
-				"AdminPassword": "[steps('vmParameters').vmCredentials.value.password]",
-				"outVirtualNetworkCombo": "[steps('networking').vnet]",
-				"vnet_Name": "[steps('networking').vnet.name]",
-				"vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
-				"subnet_Name": "[steps('networking').vnet.subnets.subnet1.name]",
-				"outTagsByResource": "[steps('tags').tagsByResource]"
-		}
-	}
+    "$schema": "https://schema.management.azure.com/schemas/2021-09-09/uiFormDefinition.schema.json",
+    "view": {
+        "kind": "Form",
+        "properties": {
+            "title": "Test Form View",
+            "isWizard": true,
+            "steps": [
+                {
+                    "name": "basics",
+                    "label": "Basics",
+                    "elements": [
+                        {
+                            "name": "resourceScope",
+                            "type": "Microsoft.Common.ResourceScope"
+                        }
+                    ]
+                },
+                {
+                    "name": "logicConditions",
+                    "label": "Architecture Design",
+                    "elements": [
+                        {
+                            "name": "infoMessage",
+                            "type": "Microsoft.Common.InfoBox",
+                            "visible": true,
+                            "options": {
+                                "text": "Please select the following networking options",
+                                "style": "Info"
+                            }
+                        },
+                        {
+                            "name": "lb_type",
+                            "type": "Microsoft.Common.OptionsGroup",
+                            "label": "Select Load Balancer Type",
+                            "defaultValue": "private",
+                            "toolTip": "Private LB will get an internal only IP in the VNET, Public LB will get a internet routable Public IP address",
+                            "constraints": {
+                                "allowedValues": [
+                                    {
+                                        "label": "Private LB",
+                                        "value": "private"
+                                    },
+                                    {
+                                        "label": "Public LB",
+                                        "value": "public"
+                                    }
+                                ],
+                                "required": true
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "internet_egress",
+                            "type": "Microsoft.Common.OptionsGroup",
+                            "label": "Select Internet Egress Method",
+                            "defaultValue": "nat_gw",
+                            "toolTip": "",
+                            "constraints": {
+                                "allowedValues": [
+                                    {
+                                        "label": "NAT Gateway",
+                                        "value": "nat_gw"
+                                    },
+                                    {
+                                        "label": "Public IP",
+                                        "value": "public_ip"
+                                    }
+                                ],
+                                "required": true
+                            },
+                            "visible": "[if(equals(steps('logicConditions').lb_type,'private'),true,false)]"
+                        }
+                    ]
+                },
+                {
+                    "name": "vmParameters",
+                    "label": "VM Parameters",
+                    "elements": [
+                        {
+                            "name": "vmSection",
+                            "type": "Microsoft.Common.Section",
+                            "label": "Customize your VM",
+                            "elements": [
+                                {
+                                    "name": "vmSize",
+                                    "type": "Microsoft.Compute.SizeSelector",
+                                    "label": "Size",
+                                    "toolTip": "",
+                                    "recommendedSizes": [
+                                        "Standard_B8ms",
+                                        "Standard_B16ms"
+                                    ],
+                                    "constraints": {
+                                        "allowedSizes": []
+                                    },
+                                    "options": {
+                                        "hideDiskTypeFilter": false
+                                    },
+                                    "osPlatform": "Linux",
+                                    "imageReference": {
+                                        "publisher": "Canonical",
+                                        "offer": "UbuntuServer",
+                                        "sku": "18.04-LTS",
+                                        "version": "latest"
+                                    },
+                                    "count": 2,
+                                    "visible": true,
+                                    "scope": {
+                                        "subscriptionId": "[steps('basics').resourceScope.subscription.subscriptionId]",
+                                        "location": "[steps('basics').resourceScope.location.name]"
+                                    }
+                                }
+                            ],
+                            "visible": true
+                        },
+                        {
+                            "name": "adminUsername",
+                            "type": "Microsoft.Compute.UserNameTextBox",
+                            "label": "Admin Username",
+                            "defaultValue": "",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": true,
+                                "regex": "^[a-z0-9A-Z]{8,30}$",
+                                "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                            },
+                            "osPlatform": "Linux",
+                            "visible": true
+                        },
+                        {
+                            "name": "vmCredentials",
+                            "type": "Microsoft.Compute.CredentialsCombo",
+                            "label": {
+                                "password": "Password",
+                                "confirmPassword": "Confirm password"
+                            },
+                            "toolTip": {
+                                "password": ""
+                            },
+                            "constraints": {
+                                "required": true,
+                                "customPasswordRegex": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[\\w~@#$%^&*+=|{}:;!.?\\()\\[\\]-]{8,}$",
+                                "customValidationMessage": "The password must contain at least 8 characters, with at least 1 uppercase, 1 lowercase and 1 number."
+                            },
+                            "options": {
+                                "hideConfirmation": true
+                            },
+                            "osPlatform": "Linux",
+                            "visible": true
+                        }
+                    ]
+                },
+                {
+                    "name": "networking",
+                    "label": "Networking",
+                    "elements": [
+                        {
+                            "name": "networkingInfo",
+                            "type": "Microsoft.Common.TextBlock",
+                            "visible": true,
+                            "options": {
+                                "text": "Select the networking for the Load Balancer and Virtual Machine Scale Set",
+                                "link": {
+                                    "label": "",
+                                    "uri": ""
+                                }
+                            }
+                        },
+                        {
+                            "name": "vnet",
+                            "type": "Microsoft.Network.VirtualNetworkCombo",
+                            "label": {
+                                "virtualNetwork": "Virtual network",
+                                "subnets": "Subnets"
+                            },
+                            "toolTip": {
+                                "virtualNetwork": "",
+                                "subnets": ""
+                            },
+                            "defaultValue": {
+                                "name": "vnet01",
+                                "addressPrefixSize": "/24"
+                            },
+                            "constraints": {
+                                "minAddressPrefixSize": "/28"
+                            },
+                            "options": {
+                                "hideExisting": false
+                            },
+                            "subnets": {
+                                "subnet1": {
+                                    "label": "Subnet",
+                                    "defaultValue": {
+                                        "name": "subnet-1",
+                                        "addressPrefixSize": "/28"
+                                    },
+                                    "constraints": {
+                                        "minAddressPrefixSize": "/28",
+                                        "minAddressCount": 12,
+                                        "requireContiguousAddresses": false
+                                    }
+                                }
+                            },
+                            "visible": "[if(equals(steps('logicConditions').lb_type,'private'),true,false)]",
+                            "scope": {
+                                "subscriptionId": "[steps('basics').resourceScope.subscription.subscriptionId]",
+                                "resourceGroupName": "[steps('basics').resourceScope.resourceGroup.name]",
+                                "location": "[steps('basics').resourceScope.location.name]"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "log_analytics",
+                    "label": "Log Analytics",
+                    "elements": [
+                        {
+                            "name": "law_selector",
+                            "type": "Microsoft.Solutions.ResourceSelector",
+                            "label": "Select Log Analytics Workspace",
+                            "resourceType": "Microsoft.OperationalInsights/workspaces"
+                        }
+                    ]
+                },
+                {
+                    "name": "tags",
+                    "label": "Tags",
+                    "elements": [
+                        {
+                            "name": "tagsByResource",
+                            "type": "Microsoft.Common.TagsByResource",
+                            "resources": [
+                                "Microsoft.Storage/storageAccounts",
+                                "Microsoft.Compute/virtualMachines"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "outputs": {
+            "parameters": {
+                "Base_Name": "fwcadmin",
+                "Autoscale_Min": 1,
+                "Autoscale_Max": 2,
+                "workspaceId": "2",
+                "workspaceKey": "2",
+                "outSizeSelector": "[steps('vmParameters').vmSection.vmSize]",
+                "AdminUserName": "[steps('vmParameters').adminUsername]",
+                "AdminPassword": "[steps('vmParameters').vmCredentials.value.password]",
+                "outVirtualNetworkCombo": "[steps('networking').vnet]",
+                "vnet_Name": "[steps('networking').vnet.name]",
+                "vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
+                "subnet_Name": "[steps('networking').vnet.subnets.subnet1.name]",
+                "outTagsByResource": "[steps('tags').tagsByResource]",
+                "location": "[steps('basics').resourceScope.location.name]"
+            },
+            "kind": "ResourceGroup",
+            "location": "[steps('basics').resourceScope.location.name]",
+            "resourceGroupId": "[steps('basics').resourceScope.resourceGroup.id]"
+        }
+    }
 }
