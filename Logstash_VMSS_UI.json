@@ -101,7 +101,7 @@
                                     "publisher": "Canonical",
                                     "offer": "UbuntuServer",
                                     "sku": "18.04-LTS",
-									"version": "latest"
+									                  "version": "latest"
                                 },
                                 "count": 2,
                                 "visible": true
@@ -139,7 +139,7 @@
                             "customValidationMessage": "The password must contain at least 8 characters, with at least 1 uppercase, 1 lowercase and 1 number."
                         },
                         "options": {
-                            "hideConfirmation": false
+                            "hideConfirmation": true
                         },
                         "osPlatform": "Linux",
                         "visible": true
@@ -230,11 +230,12 @@
         ],
         "outputs": {
             "outSizeSelector": "[steps('vmParameters').vmSection.vmSize]",
-            "outUserNameTextBox": "[steps('vmParameters').adminUsername]",
-            "outCredentialsCombo": "[steps('vmParameters').vmCredentials]",
+            "AdminUserName": "[steps('vmParameters').adminUsername]",
+            "AdminPassword": "[steps('vmParameters').vmCredentials.value.password]",
             "outVirtualNetworkCombo": "[steps('networking').vnet]",
-			"virtualNetworkName": "[steps('networking').vnet.name]",
-            "vNetRgName": "[steps('networking').vnet.resourceGroup]",
+	    "vnet_Name": "[steps('networking').vnet.name]",
+            "vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
+            "subnet_Name": "[steps('networking').vnet.subnet.subnet1.name]",
             "outTagsByResource": "[steps('tags').tagsByResource]"
         }
     }
