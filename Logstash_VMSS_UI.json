@@ -248,7 +248,7 @@
                 "workspaceKey": "2",
                 "outSizeSelector": "[steps('vmParameters').vmSection.vmSize]",
                 "AdminUserName": "[steps('vmParameters').adminUsername]",
-                "AdminPassword": "[steps('vmParameters').vmCredentials]",
+                "AdminPassword": "[steps('vmParameters').vmCredentials.password]",
                 "outVirtualNetworkCombo": "[steps('networking').vnet]",
                 "vnet_Name": "[steps('networking').vnet.name]",
                 "vnet_RG_Name": "[steps('networking').vnet.resourceGroup]",
