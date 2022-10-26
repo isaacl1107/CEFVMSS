@@ -63,7 +63,7 @@
 							"name": "internet_egress",
 							"type": "Microsoft.Common.OptionsGroup",
 							"label": "Select Internet Egress Method",
-							"defaultValue": "nat_gw",
+							"defaultValue": "public_ip",
 							"toolTip": "",
 							"constraints": {
 								"allowedValues": [{
@@ -324,8 +324,8 @@
 				"workspaceKey": "[steps('log_analytics').workspace_key]",
 				"location": "[steps('basics').resourceScope.location.name]",
   				"lb_type": "[steps('logicConditions').lb_type]",
-				"internet_gateway": "[if(empty(steps('logicConditions').internet_egress),'none',steps('logicConditions').internet_egress)]"
-	
+				"internet_gateway": "[steps('logicConditions').internet_egress]"
+
 			},
 			"kind": "ResourceGroup",
 			"location": "[steps('basics').resourceScope.location.name]",
