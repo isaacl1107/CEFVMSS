@@ -324,7 +324,7 @@
 				"workspaceKey": "[steps('log_analytics').workspace_key]",
 				"location": "[steps('basics').resourceScope.location.name]",
   				"lb_type": "[steps('logicConditions').lb_type]",
-				"internet_gateway": "[steps('logicConditions').internet_egress]"
+				"internet_egress": "[steps('logicConditions').internet_egress]"
 
 			},
 			"kind": "ResourceGroup",
