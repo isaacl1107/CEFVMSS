@@ -31,11 +31,11 @@
 		},
 		"workspaceId": {
 			"type": "string",
-      "defaultValue": 2
+			"defaultValue": 2
 		},
 		"workspaceKey": {
 			"type": "string",
-      "defaultValue": 2
+			"defaultValue": 2
 		}
 	},
 	"variables": {
@@ -207,15 +207,12 @@
 											"id": "[resourceId(parameters('vnet_RG_Name'), 'Microsoft.Network/virtualNetworks/Subnets', parameters('vnet_Name'), parameters('subnet_Name'))]"
 										},
 										"privateIPAddressVersion": "IPv4",
-                    "publicIPAddressconfiguration": {
-                      "name": "publicip",
-                      "properties": {
-                      "idleTimeoutInMinutes": 10,
-                        "dnsSettings": {
-                          "domainNameLabel": "[parameters('vmssDnsName')]"
-                        }
-                      }
-                    },
+										"publicIPAddressconfiguration": {
+											"name": "publicip",
+											"properties": {
+												"idleTimeoutInMinutes": 10
+											}
+										},
 										"loadBalancerBackendAddressPools": [{
 											"id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadbalancer_Name')), '/backendAddressPools/bepool')]"
 										}]
