@@ -167,7 +167,7 @@
 							"protocol": "*",
 							"sourcePortRange": "*",
 							"destinationPortRange": "5514",
-							"sourceAddressPrefix": "*",
+							"sourceAddressPrefix": "AzureLoadBalancer",
 							"destinationAddressPrefix": "*",
 							"access": "Allow",
 							"priority": 1000,
@@ -177,23 +177,7 @@
 							"sourceAddressPrefixes": [],
 							"destinationAddressPrefixes": []
 						}
-					},
-					{
-						"name": "Allow-SSH",
-						"properties": {
-							"protocol": "*",
-							"sourcePortRange": "*",
-							"destinationPortRange": "22",
-							"sourceAddressPrefix": "*",
-							"destinationAddressPrefix": "*",
-							"access": "Allow",
-							"priority": 1001,
-							"direction": "Inbound",
-							"sourcePortRanges": [],
-							"destinationPortRanges": [],
-							"sourceAddressPrefixes": [],
-							"destinationAddressPrefixes": []
-						}
+					}
 					}
 				]
 			}
@@ -206,35 +190,13 @@
 				"[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_Name'))]"
 			],
 			"properties": {
-				"protocol": "TCP",
+				"protocol": "*",
 				"sourcePortRange": "*",
 				"destinationPortRange": "5514",
-				"sourceAddressPrefix": "*",
+				"sourceAddressPrefix": "AzureLoadBalancer",
 				"destinationAddressPrefix": "*",
 				"access": "Allow",
 				"priority": 1000,
-				"direction": "Inbound",
-				"sourcePortRanges": [],
-				"destinationPortRanges": [],
-				"sourceAddressPrefixes": [],
-				"destinationAddressPrefixes": []
-			}
-		},
-		{
-			"type": "Microsoft.Network/networkSecurityGroups/securityRules",
-			"apiVersion": "2019-09-01",
-			"name": "[concat(variables('nsg_Name'), '/Allow-SSH')]",
-			"dependsOn": [
-				"[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_Name'))]"
-			],
-			"properties": {
-				"protocol": "TCP",
-				"sourcePortRange": "*",
-				"destinationPortRange": "22",
-				"sourceAddressPrefix": "*",
-				"destinationAddressPrefix": "*",
-				"access": "Allow",
-				"priority": 1001,
 				"direction": "Inbound",
 				"sourcePortRanges": [],
 				"destinationPortRanges": [],
